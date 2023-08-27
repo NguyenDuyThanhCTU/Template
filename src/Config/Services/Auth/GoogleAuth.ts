@@ -4,14 +4,14 @@ import {
   getAdditionalUserInfo,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut,
 } from "firebase/auth";
 import { addDocument } from "../Firebase/FireStoreDB";
 
 export const googleSignIn = async () => {
   const GoogleProvider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, GoogleProvider);
-  const { isNewUser } = getAdditionalUserInfo(result);
+  const { isNewUser }: any = getAdditionalUserInfo(result);
+
   if (isNewUser) {
     addDocument("users", {
       displayName: result.user?.displayName,
@@ -22,12 +22,3 @@ export const googleSignIn = async () => {
   }
   return result.user?.email;
 };
-
-// const LogOut = () => {
-//   signOut(auth);
-//   router.push("/login");
-//   notification["warning"]({
-//     message: "Đã đăng xuất !",
-//     description: `Bạn đã đăng xuất khỏi ${window.location.hostname} !`,
-//   });
-// };

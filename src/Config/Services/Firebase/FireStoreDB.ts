@@ -14,34 +14,20 @@ import {
 } from "firebase/firestore";
 import { db } from "../../Firebase";
 
-export const addDocument = async (Collection, data) => {
+export const addDocument = async (Collection: string, data: any) => {
   data.createdAt = serverTimestamp();
   try {
     const newDocument = await addDoc(collection(db, Collection), data);
-
     return newDocument.id;
   } catch (error) {
     console.error("Error adding document: ", error);
   }
 };
 
-export const getDocuments = async (Collection) => {
-  try {
-    const q = query(collection(db, Collection));
-    const querySnapshot = await getDocs(q);
-    const data = [];
-
-    querySnapshot.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() });
-    });
-
-    return data;
-  } catch (error) {
-    console.error("Error get document: ", error);
-  }
-};
-
-export const getDocumentById = async (Collection, documentId) => {
+export const getDocumentById = async (
+  Collection: string,
+  documentId: string
+) => {
   try {
     const docRef = doc(db, Collection, documentId);
     const docSnapshot = await getDoc(docRef);
@@ -58,13 +44,32 @@ export const getDocumentById = async (Collection, documentId) => {
   }
 };
 
-export const getProducts = async (Collection) => {
+export const getAllDocuments = async (Collection: string) => {
   try {
-    const q = query(collection(db, Collection), orderBy("createdAt"));
+    const q = query(collection(db, Collection));
     const querySnapshot = await getDocs(q);
-    const data = [];
+    const data: Array<any> = [];
 
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc: any) => {
+      data.push({ id: doc.id, ...doc.data() });
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Error get document: ", error);
+  }
+};
+
+export const getDocumentsInOrder = async (
+  Collection: string,
+  field: string
+) => {
+  try {
+    const q = query(collection(db, Collection), orderBy(field));
+    const querySnapshot = await getDocs(q);
+    const data: Array<any> = [];
+
+    querySnapshot.forEach((doc: any) => {
       const createdAt = doc.data().createdAt.toDate();
       const serverTime = Timestamp.now().toDate();
 
@@ -80,13 +85,17 @@ export const getProducts = async (Collection) => {
   }
 };
 
-export const getDocumentByField = async (Collection, field, value) => {
+export const getDocumentsByField = async (
+  Collection: string,
+  field: string,
+  value: any
+) => {
   try {
     const q = query(collection(db, Collection), where(field, "==", value));
     const querySnapshot = await getDocs(q);
-    const data = [];
+    const data: Array<any> = [];
 
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc: any) => {
       data.push({ id: doc.id, ...doc.data() });
     });
 
@@ -96,65 +105,20 @@ export const getDocumentByField = async (Collection, field, value) => {
   }
 };
 
-export const getDocumentsByField = async (Collection, Type, Size) => {
-  try {
-    let q = query(
-      collection(db, Collection),
-      where("brickType", "==", Type),
-      where("brickSize", "==", Size)
-    );
-    if (Type === " " && Size === " ") {
-      q = query(collection(db, Collection));
-    } else if (Size === " ") {
-      q = query(collection(db, Collection), where("brickType", "==", Type));
-    } else if (Type === " ") {
-      q = query(collection(db, Collection), where("brickSize", "==", Size));
-    }
-
-    const querySnapshot = await getDocs(q);
-    const data = [];
-
-    querySnapshot.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() });
-    });
-
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const checkDocument = async (Collection, currentData) => {
-  return new Promise((resolve, reject) => {
-    const q = query(
-      collection(db, Collection),
-      where("password", "==", currentData)
-    );
-
-    getDocs(q)
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          reject(new Error("Không có dữ liệu."));
-        } else {
-          resolve();
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
-
-export const updateDocument = async (collectionName, id, newData) => {
+export const updateDocument = async (
+  collectionName: string,
+  id: string,
+  newData: object
+) => {
   await updateDoc(doc(db, collectionName, id), newData);
 };
 
 export const updateArrayFieldAtIndex = async (
-  collectionName,
-  id,
-  fieldName,
-  newData,
-  index
+  collectionName: string,
+  id: string,
+  fieldName: string,
+  newData: any,
+  index: number
 ) => {
   try {
     const ref = doc(db, collectionName, id);
@@ -168,38 +132,20 @@ export const updateArrayFieldAtIndex = async (
         if (index >= 0 || index < updatedArray.length) {
           updatedArray[index] = newData;
 
-          await updateDoc(ref, { [fieldName]: updatedArray }); // Cập nhật trường mảng trong tài liệu
-
-          console.log("Cập nhật trường mảng thành công!");
-        } else {
-          console.error("Số thứ tự mảng không hợp lệ!");
+          await updateDoc(ref, { [fieldName]: updatedArray });
         }
-      } else {
-        console.error("Trường không phải là một mảng!");
       }
-    } else {
-      console.error("Không tìm thấy tài liệu!");
     }
   } catch (error) {
-    console.error("Lỗi khi cập nhật trường mảng:", error);
+    console.error(error);
   }
 };
-
-export const delDocument = async (CollectionName, id) => {
-  try {
-    await deleteDoc(doc(db, CollectionName, id));
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-// CRUD with array Field
 
 export const addDataToArrayField = async (
-  collectionName,
-  documentId,
-  fieldName,
-  newData
+  collectionName: string,
+  documentId: string,
+  fieldName: string,
+  newData: object
 ) => {
   try {
     const ref = doc(db, collectionName, documentId);
@@ -212,21 +158,21 @@ export const addDataToArrayField = async (
 
       await updateDoc(ref, { [fieldName]: arrayField });
 
-      console.log(`Thêm dữ liệu vào trường ${fieldName} thành công!`);
+      console.log("Success!");
     } else {
-      console.error("Không tìm thấy tài liệu!");
+      console.error("Document Not Found!");
     }
   } catch (error) {
-    console.error(`Lỗi khi thêm dữ liệu vào trường ${fieldName}:`, error);
+    console.error(error);
   }
 };
 
 export const updateDataInArrayField = async (
-  collectionName,
-  documentId,
-  fieldName,
-  dataIndex,
-  updatedData
+  collectionName: string,
+  documentId: string,
+  fieldName: string,
+  dataIndex: any,
+  updatedData: any
 ) => {
   try {
     const ref = doc(db, collectionName, documentId);
@@ -253,11 +199,19 @@ export const updateDataInArrayField = async (
   }
 };
 
+export const delDocument = async (CollectionName: string, id: string) => {
+  try {
+    await deleteDoc(doc(db, CollectionName, id));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const deleteDataFromArrayField = async (
-  collectionName,
-  documentId,
-  fieldName,
-  dataIndex
+  collectionName: string,
+  documentId: string,
+  fieldName: string,
+  dataIndex: any
 ) => {
   try {
     const ref = doc(db, collectionName, documentId);

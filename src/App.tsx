@@ -1,23 +1,44 @@
 import "./input.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-function App() {
+import { AuthProviders } from "./Context/AuthProviders";
+import { StateProvider } from "./Context/StateProvider";
+import { DataProviders } from "./Context/DataProviders";
+
+import { AllRoutes } from "./Routes";
+import Fetch from "./Components/Item/Fetch";
+const App = () => {
   return (
-    <div>
-      <header className="text-red-500">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <DataProviders>
+        <StateProvider>
+          <AuthProviders>
+            <Fetch />
+            <Router>
+              <Routes>
+                {AllRoutes.map((route, index) => {
+                  let Layout = route.Layout;
+
+                  const Page = route.component;
+                  return (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      element={
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      }
+                    />
+                  );
+                })}
+              </Routes>
+            </Router>
+          </AuthProviders>
+        </StateProvider>
+      </DataProviders>
+    </>
   );
-}
+};
 
 export default App;

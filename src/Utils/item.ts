@@ -34,8 +34,13 @@ import { IoMdColorWand } from "react-icons/io";
 import { GiExitDoor } from "react-icons/gi";
 
 import { CiViewList } from "react-icons/ci";
+import { IconType } from "react-icons/lib";
 
-export const IconMapping = {
+interface IconMappingType {
+  [key: string]: IconType;
+}
+
+export const IconMapping: IconMappingType = {
   SiZalo: SiZalo,
   BsFacebook: BsFacebook,
   HiOutlineUserGroup: HiOutlineUserGroup,
@@ -166,17 +171,6 @@ export const SocialMediaDashboard = [
     image:
       "https://img.nhandan.com.vn/Files/Images/2021/04/13/3A708284_F5B8_407D_ADC0_339DBEE-1618275907021.jpeg",
     style: "hover:bg-red-600 hover:text-white p-1",
-  },
-];
-
-export const HeaderDropDownItems = [
-  {
-    name: "Hồ sơ",
-    icon: "AiOutlineProfile",
-  },
-  {
-    name: "Thoát",
-    icon: "GiExitDoor",
   },
 ];
 
