@@ -10,37 +10,38 @@ import { updateDocument } from "../../../../Config/Services/Firebase/FireStoreDB
 import { useData } from "../../../../Context/DataProviders";
 import { TypeProductItems } from "../../../../Utils/item";
 import { uploadImage } from "../Handle";
-import Product from "../../Content/Service/Product/Product";
+
+type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
 const UpdateProduct = () => {
-  const [imageUrl, setImageUrl] = useState();
-  const [Title, setTitle] = useState();
-  const [Price, setPrice] = useState();
-  const [Content, setContent] = useState();
-  const [isType, setIsType] = useState("");
-  const [isTypeParams, setIsTypeParams] = useState("");
-  const [isParent, setIsParent] = useState("");
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [Title, setTitle] = useState<string>();
+  const [Price, setPrice] = useState<string>();
+  const [Content, setContent] = useState<string>();
+  const [isType, setIsType] = useState<string>();
+  const [isTypeParams, setIsTypeParams] = useState<string>();
+  const [isParent, setIsParent] = useState<string>();
   const [isParentParams, setIsParentParams] = useState("");
   const [color, setColor] = useState("");
-  const [colorImage, setColorImage] = useState();
-  const [listColor, setListColor] = useState([]);
-  const [column, setColumn] = useState();
-  const [listUrl, setListUrl] = useState([]);
-  const { setIsUploadProduct, setIsRefetch } = useStateProvider();
-  const { productTypes, Products, updateId } = useData();
+  const [colorImage, setColorImage] = useState("");
+  const [listColor, setListColor] = useState<any>([]);
+  const [column, setColumn] = useState<string>();
+  const [listUrl, setListUrl] = useState<any>([]);
+  const { setDropDown, setIsRefetch } = useStateProvider();
+  const { productTypes, Products, UpdateId } = useData();
   //
-  const [ProductSort, setProductSort] = useState([]);
+  const [ProductSort, setProductSort] = useState<any>();
   const handleDiscard = () => {
     setContent("");
     setTitle("");
   };
 
   useEffect(() => {
-    const product = Products.filter((item) => item.id === updateId);
+    const product = Products.filter((item: any) => item.id === UpdateId);
     if (product) {
       setProductSort(product[0]);
     }
-  }, [Products, updateId]);
+  }, [Products, UpdateId]);
 
   useEffect(() => {
     setListColor(ProductSort.color);
@@ -60,7 +61,7 @@ const UpdateProduct = () => {
       ...(listColor && { color: listColor }),
     };
 
-    updateDocument("products", updateId, data).then(() => {
+    updateDocument("products", UpdateId, data).then(() => {
       notification["success"]({
         message: "Tải lên thành công!",
         description: `Sản phẩm của bạn đã được cập nhật !`,
@@ -71,13 +72,13 @@ const UpdateProduct = () => {
     });
   };
 
-  const HandleUploadImage = (e, locate) => {
-    uploadImage(e, locate).then((data) => {
+  const HandleUploadImage = (e: ChangeEventType, locate: string) => {
+    uploadImage(e, locate).then((data: any) => {
       setImageUrl(data);
     });
   };
 
-  const HandleParentChange = (e) => {
+  const HandleParentChange = (e: any) => {
     const selectedName = e.target.value;
     setIsParent(selectedName);
     const selectedItem = TypeProductItems.find(
@@ -90,7 +91,7 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     const sortType = productTypes?.filter(
-      (item) => item.parent === isParentParams
+      (item: any) => item.parent === isParentParams
     );
     if (sortType) {
       setIsType(sortType[0]?.name);
@@ -98,32 +99,32 @@ const UpdateProduct = () => {
     }
   }, [isParent, isParentParams, productTypes]);
 
-  const HandleTypeChange = (e) => {
+  const HandleTypeChange = (e: any) => {
     const selectedName = e.target.value;
     setIsType(selectedName);
     const selectedItem = productTypes.find(
-      (item) => item.name === selectedName
+      (item: any) => item.name === selectedName
     );
     if (selectedItem) {
       setIsTypeParams(selectedItem.params);
     }
   };
 
-  const popValue = (indexToRemove, type) => {
+  const popValue = (indexToRemove: number, type: string) => {
     if (type === "image") {
-      setListUrl((prevUrls) =>
-        prevUrls.filter((_, index) => index !== indexToRemove)
+      setListUrl((prevUrls: any) =>
+        prevUrls.filter((_: any, index: any) => index !== indexToRemove)
       );
     } else if (type === "color") {
-      setListColor((prevUrls) =>
-        prevUrls.filter((_, index) => index !== indexToRemove)
+      setListColor((prevUrls: any) =>
+        prevUrls.filter((_: any, index: any) => index !== indexToRemove)
       );
     }
   };
 
-  const pushValue = (type) => {
+  const pushValue = (type: any) => {
     if (type === "image") {
-      setListUrl((prevUrls) => [...prevUrls, imageUrl]);
+      setListUrl((prevUrls: any) => [...prevUrls, imageUrl]);
       setImageUrl("");
     } else if (type === "color") {
       const data = {
@@ -131,7 +132,7 @@ const UpdateProduct = () => {
         image: colorImage,
       };
 
-      setListColor((prevUrls) => [...prevUrls, data]);
+      setListColor((prevUrls: any) => [...prevUrls, data]);
       setColor("");
       setColorImage("");
       // for (let i = 0; i <= 555; i++) {
@@ -182,6 +183,7 @@ const UpdateProduct = () => {
                         Value={imageUrl}
                         setValue={setImageUrl}
                         Input={true}
+                        PlaceHolder=""
                       />
                     </div>
                   </div>
@@ -215,7 +217,7 @@ const UpdateProduct = () => {
             </div>
 
             <div className="flex items-center gap-10">
-              <div class=" w-[700px] flex flex-col  items-center">
+              <div className=" w-[700px] flex flex-col  items-center">
                 <div className="grid grid-cols-2 gap-5 w-full">
                   {isParentParams === "album-anh" ? (
                     <></>
@@ -242,6 +244,7 @@ const UpdateProduct = () => {
                           text="Mô tả sản phẩm"
                           Value={Content}
                           setValue={setContent}
+                          Input={false}
                           PlaceHolder={ProductSort.describe}
                         />
                       </div>
@@ -279,9 +282,10 @@ const UpdateProduct = () => {
                         >
                           {productTypes
                             ?.filter(
-                              (item) => item.parentParams === isParentParams
+                              (item: any) =>
+                                item.parentParams === isParentParams
                             )
-                            .map((item, idx) => (
+                            .map((item: any, idx: any) => (
                               <option
                                 key={idx}
                                 className=" outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
@@ -301,6 +305,7 @@ const UpdateProduct = () => {
                             setValue={setColor}
                             text="Mã màu"
                             Input={true}
+                            PlaceHolder=""
                           />
                         </div>
                         <label>
@@ -309,9 +314,7 @@ const UpdateProduct = () => {
                           </p>
                           <input
                             type="file"
-                            onChange={(e) =>
-                              HandleUploadImage(e, "color", "color")
-                            }
+                            onChange={(e) => HandleUploadImage(e, "color")}
                             className="w-0 h-0"
                             id="fileInput"
                           />
@@ -357,7 +360,7 @@ const UpdateProduct = () => {
                           {listColor && (
                             <>
                               {" "}
-                              {listColor.map((items, idx) => {
+                              {listColor.map((items: any, idx: number) => {
                                 return (
                                   <div className="my-2 relative w-[50px] h-[50px] group border flex justify-center items-center">
                                     <img src={items.image} alt="" />
@@ -381,7 +384,7 @@ const UpdateProduct = () => {
                         không có màu bạn cần?{" "}
                         <span
                           className="hover:text-blue-500 hover:underline underline"
-                          onClick={() => setIsUploadProduct("add-color")}
+                          onClick={() => setDropDown("add-color")}
                         >
                           thêm màu
                         </span>
@@ -415,7 +418,7 @@ const UpdateProduct = () => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

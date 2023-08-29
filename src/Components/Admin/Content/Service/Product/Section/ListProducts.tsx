@@ -18,11 +18,11 @@ import { delDocument } from "../../../../../../Config/Services/Firebase/FireStor
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import ListProduct from "./ListTypes";
 
-const ListProducts = ({ name }) => {
-  const { setIsRefetch, setIsUploadProduct } = useStateProvider();
+const ListProducts = () => {
+  const { setIsRefetch, setDropDown } = useStateProvider();
   const { Products, setUpdateId } = useData();
 
-  const HandleDelete = (id) => {
+  const HandleDelete = (id: string) => {
     delDocument("products", id).then(() => {
       notification["success"]({
         message: "Thành công!",
@@ -32,14 +32,14 @@ const ListProducts = ({ name }) => {
     setIsRefetch("deleted");
   };
 
-  const HandleEdit = (id) => {
+  const HandleEdit = (id: string) => {
     setUpdateId(id);
-    setIsUploadProduct("edit-product");
+    setDropDown("edit-product");
   };
 
-  const HandleUpdate = (id) => {
+  const HandleUpdate = (id: string) => {
     setUpdateId(id);
-    setIsUploadProduct("update-product");
+    setDropDown("update-product");
   };
 
   return (
@@ -48,7 +48,7 @@ const ListProducts = ({ name }) => {
         <div className="flex items-center justify-start gap-2 ">
           <div className="h-1 w-[70px] bg-[#40b2b5] d:block p:hidden"></div>
           <h3 className="text-[24px] font-normal uppercase text-center">
-            {name}
+            Thêm sản phẩm
           </h3>
         </div>
         <div className="flex gap-5 d:flex-row p:flex-col">
@@ -73,7 +73,7 @@ const ListProducts = ({ name }) => {
                         modules={[Autoplay, Navigation]}
                         className="mySwiper"
                       >
-                        {Products.map((items) => (
+                        {Products.map((items: any) => (
                           <>
                             <SwiperSlide>
                               <img
@@ -100,7 +100,7 @@ const ListProducts = ({ name }) => {
                 <div className="mt-3">
                   <div
                     className="flex  justify-center items-center gap-2 uppercase py-2 border mx-2 bg-purple hover:bg-purpleAdmin hover:text-purpleHover hover:border-purpleHover text-blueAdmin border-blueAdmin  "
-                    onClick={() => setIsUploadProduct("add-product")}
+                    onClick={() => setDropDown("add-product")}
                   >
                     <AiOutlineCloudUpload className="text-[20px]" />{" "}
                     <p>Tải lên</p>
@@ -114,7 +114,7 @@ const ListProducts = ({ name }) => {
                   Danh sách sản phẩm
                 </p>
                 <div className="h-[400px]  w-full border  rounded-2xl overflow-y-scroll ">
-                  {Products.map((data, idx) => (
+                  {Products.map((data: any, idx: number) => (
                     <div
                       key={idx}
                       className="grid  grid-cols-4 items-center my-2  ml-1 justify-start px-5 "

@@ -11,16 +11,16 @@ import TextEditor from "../../../Item/TextEditor";
 
 const AddPost = () => {
   const [editorData, setEditorData] = useState("");
-  const [PostSort, setPost] = useState([]);
-  const { setIsRefetch, setIsUploadProduct } = useStateProvider();
-  const { updateId, Posts } = useData();
+  const [PostSort, setPost] = useState<any>();
+  const { setIsRefetch, setDropDown } = useStateProvider();
+  const { UpdateId, Posts } = useData();
 
   useEffect(() => {
-    const sort = Posts.filter((item) => item.id === updateId);
+    const sort = Posts.filter((item: any) => item.id === UpdateId);
     if (sort) {
       setPost(sort[0]);
     }
-  }, [Posts, updateId]);
+  }, [Posts, UpdateId]);
 
   const HandleDiscard = () => {
     setEditorData("");
@@ -35,9 +35,9 @@ const AddPost = () => {
       });
     } else {
       const data = {
-        content: editorData,
+        ...(editorData && { content: editorData }),
       };
-      updateDocument("posts", updateId, data).then(() => {
+      updateDocument("posts", UpdateId, data).then(() => {
         notification["success"]({
           message: "Thành công !",
           description: `
@@ -48,7 +48,7 @@ const AddPost = () => {
       });
     }
   };
-
+  console.log(editorData);
   return (
     <div
       className={`bg-[rgba(0,0,0,0.3)] w-full flex items-center justify-center 
@@ -59,10 +59,10 @@ const AddPost = () => {
         <div className="items-center justify-center  w-full flex  ">
           <div className="flex w-full h-full  justify-center gap-4 flex-col items-center ">
             <p className="text-2xl font-bold text-center mb-5">
-              Chi tiết bài viết
+              Nội dung bài viết {PostSort?.title}
             </p>
 
-            <div className=" w-[60vw] mx-auto overflow-y-auto h-[500px]">
+            <div className=" w-[60vw] mx-auto overflow-y-auto h-[500px] ">
               <TextEditor
                 editorData={`${
                   PostSort?.content ? `${PostSort?.content}` : `${editorData}`
@@ -70,6 +70,7 @@ const AddPost = () => {
                 setEditorData={setEditorData}
               />
             </div>
+
             <div className="flex gap-6 mt-10">
               <button
                 onClick={() => HandleDiscard()}
@@ -92,7 +93,7 @@ const AddPost = () => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

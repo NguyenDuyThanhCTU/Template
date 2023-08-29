@@ -6,7 +6,7 @@ const Introduce = () => {
 
   return (
     <div className=" gap-5 w-full">
-      <div className="text-black">
+      <div className="text-black bg-white h-[500px]">
         {" "}
         <TextEditor editorData={editorData} setEditorData={setEditorData} />
       </div>

@@ -7,8 +7,7 @@ import ProductDetail from "./DropDownItem/ProductDetail";
 import Profile from "./DropDownItem/Profile";
 import AddBranch from "./DropDownItem/AddBranch";
 import UpdateProduct from "./DropDownItem/UpdateProduct";
-import AddChildrenType from "./DropDownItem/AddChildrenType";
-import AddColor from "./DropDownItem/AddColor";
+
 import EditProduct from "./DropDownItem/EditProduct";
 
 const AdminDropDown = () => {
@@ -21,16 +20,12 @@ const AdminDropDown = () => {
     >
       {isDropDown === "add-types" ? (
         <AddType />
-      ) : isDropDown === "add-children-type" ? (
-        <AddChildrenType />
       ) : isDropDown === "add-post" ? (
         <AddPost />
       ) : isDropDown === "add-product" ? (
         <AddProduct />
       ) : isDropDown === "edit-product" ? (
         <EditProduct />
-      ) : isDropDown === "add-color" ? (
-        <AddColor />
       ) : isDropDown === "update-product" ? (
         <UpdateProduct />
       ) : isDropDown === "add-branch" ? (

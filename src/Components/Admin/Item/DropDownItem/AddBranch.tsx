@@ -13,20 +13,20 @@ import {
 import { useData } from "../../../../Context/DataProviders";
 
 const AddBranch = () => {
-  const [BranchName, setBranchName] = useState();
-  const [BranchAddress, setBranchAddress] = useState();
-  const [BranchHotline, setBranchHotline] = useState();
-  const [BranchEmail, setBranchEmail] = useState();
-  const [BranchLocation, setBranchLocation] = useState("");
-  const { setIsRefetch, setIsUploadProduct } = useStateProvider();
-  const { branches } = useData();
+  const [BranchName, setBranchName] = useState<string>();
+  const [BranchAddress, setBranchAddress] = useState<string>();
+  const [BranchHotline, setBranchHotline] = useState<string>();
+  const [BranchEmail, setBranchEmail] = useState<string>();
+  const [BranchLocation, setBranchLocation] = useState<string>();
+  const { setIsRefetch, setDropDown } = useStateProvider();
+  const { Branches } = useData();
 
   const handleDiscard = () => {
-    setBranchName();
-    setBranchAddress();
-    setBranchHotline();
-    setBranchEmail();
-    setBranchLocation();
+    setBranchName("");
+    setBranchAddress("");
+    setBranchHotline("");
+    setBranchEmail("");
+    setBranchLocation("");
   };
 
   const HandleSubmit = () => {
@@ -77,24 +77,28 @@ const AddBranch = () => {
                   Value={BranchName}
                   setValue={setBranchName}
                   Input={true}
+                  PlaceHolder=""
                 />
                 <Input
                   text={`Địa chỉ`}
                   Value={BranchAddress}
                   setValue={setBranchAddress}
                   Input={true}
+                  PlaceHolder=""
                 />
                 <Input
                   text={`Hotline`}
                   Value={BranchHotline}
                   setValue={setBranchHotline}
                   Input={true}
+                  PlaceHolder=""
                 />
                 <Input
                   text={`Email`}
                   Value={BranchEmail}
                   setValue={setBranchEmail}
                   Input={true}
+                  PlaceHolder=""
                 />
               </div>
               <div className="flex-1">
@@ -103,14 +107,14 @@ const AddBranch = () => {
                   Value={BranchLocation}
                   setValue={setBranchLocation}
                   Input={true}
+                  PlaceHolder=""
                 />
                 <iframe
-                  src={BranchLocation ? BranchLocation : branches.location}
+                  src={BranchLocation ? BranchLocation : Branches.location}
                   className="border"
                   width="300"
                   height="200"
                   loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"
                 ></iframe>
               </div>
             </div>
@@ -136,7 +140,7 @@ const AddBranch = () => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

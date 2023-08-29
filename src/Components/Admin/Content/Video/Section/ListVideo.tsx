@@ -8,18 +8,18 @@ import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB
 import { useStateProvider } from "../../../../../Context/StateProvider";
 
 const ListVideo = () => {
-  const [Option, setOption] = useState("");
+  const [Option, setOption] = useState<number>();
   const { Videos } = useData();
   const { setIsRefetch } = useStateProvider();
 
-  const HandleOpenOption = (idx) => {
+  const HandleOpenOption = (idx: number) => {
     if (Option === idx) {
       setOption(0);
     } else {
       setOption(idx);
     }
   };
-  const HandleDelete = (id) => {
+  const HandleDelete = (id: string) => {
     delDocument("videos", id).then(() => {
       notification["success"]({
         message: "Thành công!",
@@ -30,7 +30,7 @@ const ListVideo = () => {
   };
   return (
     <div className="h-[400px] border  rounded-2xl overflow-y-scroll flex-[70%] ">
-      {Videos?.map((data, idx) => (
+      {Videos?.map((data: any, idx: number) => (
         <div
           key={idx}
           className="grid  grid-cols-3 items-center my-2  ml-1 justify-start px-5  py-3"

@@ -11,7 +11,7 @@ const UploadVideo = () => {
   const [embedUrl, setEmbedUrl] = useState("");
   const { setIsRefetch } = useStateProvider();
 
-  const getVideoId = (url) => {
+  const getVideoId = (url: string) => {
     const match = url.match(
       /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/|v\/|u\/\w\/|embed\/?\??(?:\w*=\w*)*)?([\w-]{11})/
     );
@@ -68,6 +68,8 @@ const UploadVideo = () => {
               text="Liên kết video youtube"
               Value={videoUrl}
               setValue={setVideoUrl}
+              Input={false}
+              PlaceHolder=""
             />
 
             <div>

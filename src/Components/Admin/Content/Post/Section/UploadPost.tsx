@@ -11,7 +11,6 @@ import { uploadImage } from "../../../Item/Handle";
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
 const UploadPost = () => {
-  const [Step, setStep] = useState(0);
   const [Title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
@@ -28,7 +27,6 @@ const UploadPost = () => {
     setImageUrl("");
 
     setTitle("");
-    setStep(0);
   };
 
   const HandleContinue = () => {
@@ -80,7 +78,7 @@ const UploadPost = () => {
           </div>
         </div>
         <div className="h-[250px] text-black w-full">
-          <div onClick={() => setStep(2)}>
+          <div>
             <Input
               text="Tiêu đề bài viết"
               Value={Title}

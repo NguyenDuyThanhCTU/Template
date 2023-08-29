@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { SlOptions } from "react-icons/sl";
-import { IconMapping } from "../../../../../Utils/item";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 import { useData } from "../../../../../Context/DataProviders";
 import { FiEdit } from "react-icons/fi";
-import { FcViewDetails } from "react-icons/fc";
 import { Popconfirm, message, notification } from "antd";
 import { MdDeleteForever } from "react-icons/md";
 import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
@@ -22,6 +19,7 @@ const ListPost = () => {
       });
     });
     setIsRefetch("deleted");
+    setIsOption(0);
   };
 
   const HandleOption = (idx: number) => {
@@ -85,9 +83,8 @@ const ListPost = () => {
                     onClick={() => HandleOption(idx + 1)}
                   />
                   {isOption === idx + 1 && (
-                    <div className="w-[120px] bg-white opacity-90 absolute -top-2 h-8 right-10 rounded-lg  ">
+                    <div className="w-[80px] bg-white opacity-90 absolute -top-2 h-8 right-10 rounded-lg  ">
                       <div className="mx-3 flex  justify-between text-[24px] h-full items-center ">
-                        <FcViewDetails className="hover:scale-125 duration-300" />
                         <FiEdit
                           className="text-green-600 hover:scale-125 duration-300"
                           onClick={() => {

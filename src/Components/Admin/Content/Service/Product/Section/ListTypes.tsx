@@ -3,12 +3,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import { IconMapping, ProductOptionItems } from "../../../../../../Utils/item";
 import { useStateProvider } from "../../../../../../Context/StateProvider";
 import { useData } from "../../../../../../Context/DataProviders";
 
 const ListProduct = () => {
-  const { setIsUploadProduct } = useStateProvider();
+  const { setDropDown } = useStateProvider();
   const { productTypes } = useData();
 
   return (
@@ -20,7 +19,7 @@ const ListProduct = () => {
           </p>
           <div className="h-[400px] p:w-[60vw] d:w-[370px] border  rounded-2xl overflow-y-scroll ">
             <div className="flex flex-col cursor-pointer">
-              {productTypes.map((items, idx) => (
+              {productTypes.map((items: any, idx: number) => (
                 <>
                   <div className="flex gap-5 p-2 items-center">
                     <div>{idx + 1}</div>
@@ -34,7 +33,7 @@ const ListProduct = () => {
 
                   {items?.children.length > 0 && (
                     <>
-                      {items?.children.map((items, idx) => (
+                      {items?.children.map((items: any, idx: number) => (
                         <>
                           <div className="ml-10 text-[16px] flex  gap-3 items-center py-2">
                             <div>{idx}</div>
@@ -50,7 +49,7 @@ const ListProduct = () => {
           </div>
           <div
             className="bg-white text-redPrimmary px-4 py-1 rounded-lg uppercase cursor-pointer hover:scale-110 duration-300"
-            onClick={() => setIsUploadProduct("add-types")}
+            onClick={() => setDropDown("add-types")}
           >
             Thêm
           </div>

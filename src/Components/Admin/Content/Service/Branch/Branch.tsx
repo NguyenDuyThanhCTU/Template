@@ -1,16 +1,15 @@
 import React from "react";
 import { BiPhone, BiMapPin } from "react-icons/bi";
-import { BranchesItems } from "../../../../../Utils/temp";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
 import { notification } from "antd";
 import { useData } from "../../../../../Context/DataProviders";
 
 const Branch = () => {
-  const { setIsUploadProduct, setIsRefetch } = useStateProvider();
-  const { branches } = useData();
+  const { setDropDown, setIsRefetch } = useStateProvider();
+  const { Branches } = useData();
 
-  const HandleDelete = (id) => {
+  const HandleDelete = (id: string) => {
     delDocument("branches", id).then(() => {
       notification["success"]({
         message: "Success",
@@ -26,7 +25,7 @@ const Branch = () => {
 
         <div className=" font-NunitoSans p:grid-cols-1 border overflow-y-scroll h-[660px] w-full">
           <div className="p-2 grid d:grid-cols-4 gap-5 grid-rows-2 ">
-            {branches?.map((items, idx) => (
+            {Branches?.map((items: any, idx: number) => (
               <div className="rounded-sm shadow-2xl border" key={idx}>
                 <div className="p-4 flex flex-col justify-between h-full gap-3">
                   <h3 className="font-bold text-[24px] text-content1 py-3 border-b">
@@ -71,7 +70,7 @@ const Branch = () => {
         </div>
         <div
           className="py-5 uppercase text-[22px] text-center cursor-pointer border border-mainblue hover:bg-mainblue text-white "
-          onClick={() => setIsUploadProduct("add-branch")}
+          onClick={() => setDropDown("add-branch")}
         >
           Thêm chi nhánh
         </div>
