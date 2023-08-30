@@ -1,7 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 
-class Clock extends Component {
-  constructor(props) {
+interface ClockState {
+  time: string;
+}
+
+class Clock extends Component<{}, ClockState> {
+  private timerID: NodeJS.Timeout | null = null;
+
+  constructor(props: {}) {
     super(props);
     this.state = {
       time: new Date().toLocaleTimeString(),
@@ -13,7 +19,9 @@ class Clock extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    if (this.timerID) {
+      clearInterval(this.timerID);
+    }
   }
 
   updateClock() {
@@ -22,7 +30,7 @@ class Clock extends Component {
     });
   }
 
-  render() {
+  render(): ReactNode {
     return (
       <div className="flex gap-3">
         <h1>Realtime Clock</h1>

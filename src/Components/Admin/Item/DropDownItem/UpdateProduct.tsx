@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiFillCloseCircle, AiOutlineDelete } from "react-icons/ai";
 import { FaCloudUploadAlt } from "react-icons/fa";
-
 import { notification } from "antd";
 
 import Input from "../Input";
@@ -13,24 +12,25 @@ import { uploadImage } from "../Handle";
 
 type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
-const UpdateProduct = () => {
-  const [imageUrl, setImageUrl] = useState<string>();
-  const [Title, setTitle] = useState<string>();
-  const [Price, setPrice] = useState<string>();
-  const [Content, setContent] = useState<string>();
-  const [isType, setIsType] = useState<string>();
-  const [isTypeParams, setIsTypeParams] = useState<string>();
-  const [isParent, setIsParent] = useState<string>();
-  const [isParentParams, setIsParentParams] = useState("");
-  const [color, setColor] = useState("");
-  const [colorImage, setColorImage] = useState("");
-  const [listColor, setListColor] = useState<any>([]);
-  const [column, setColumn] = useState<string>();
-  const [listUrl, setListUrl] = useState<any>([]);
+const UpdateProduct: React.FC = () => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>();
+  const [Title, setTitle] = useState<string | undefined>();
+  const [Price, setPrice] = useState<string | undefined>();
+  const [Content, setContent] = useState<string | undefined>();
+  const [isType, setIsType] = useState<string | undefined>();
+  const [isTypeParams, setIsTypeParams] = useState<string | undefined>();
+  const [isParent, setIsParent] = useState<string | undefined>();
+  const [isParentParams, setIsParentParams] = useState<string>("");
+  const [color, setColor] = useState<string>("");
+  const [colorImage, setColorImage] = useState<string>("");
+  const [listColor, setListColor] = useState<any[]>([]);
+  const [column, setColumn] = useState<string | undefined>();
+  const [listUrl, setListUrl] = useState<any[]>([]);
   const { setDropDown, setIsRefetch } = useStateProvider();
   const { productTypes, Products, UpdateId } = useData();
-  //
+
   const [ProductSort, setProductSort] = useState<any>();
+
   const handleDiscard = () => {
     setContent("");
     setTitle("");
@@ -38,17 +38,17 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     const product = Products.filter((item: any) => item.id === UpdateId);
-    if (product) {
+    if (product.length > 0) {
       setProductSort(product[0]);
     }
   }, [Products, UpdateId]);
 
   useEffect(() => {
-    setListColor(ProductSort.color);
-  }, []);
+    setListColor(ProductSort?.color);
+  }, [ProductSort]);
 
   const HandleUpdate = () => {
-    const data = {
+    const data: any = {
       ...(Title && { title: Title }),
       ...(Content && { content: Content }),
       ...(Price && { price: Price }),
@@ -78,7 +78,7 @@ const UpdateProduct = () => {
     });
   };
 
-  const HandleParentChange = (e: any) => {
+  const HandleParentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = e.target.value;
     setIsParent(selectedName);
     const selectedItem = TypeProductItems.find(
@@ -93,13 +93,13 @@ const UpdateProduct = () => {
     const sortType = productTypes?.filter(
       (item: any) => item.parent === isParentParams
     );
-    if (sortType) {
+    if (sortType && sortType.length > 0) {
       setIsType(sortType[0]?.name);
       setIsTypeParams(sortType[0]?.params);
     }
   }, [isParent, isParentParams, productTypes]);
 
-  const HandleTypeChange = (e: any) => {
+  const HandleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = e.target.value;
     setIsType(selectedName);
     const selectedItem = productTypes.find(
@@ -116,13 +116,13 @@ const UpdateProduct = () => {
         prevUrls.filter((_: any, index: any) => index !== indexToRemove)
       );
     } else if (type === "color") {
-      setListColor((prevUrls: any) =>
-        prevUrls.filter((_: any, index: any) => index !== indexToRemove)
+      setListColor((prevColors: any) =>
+        prevColors.filter((_: any, index: any) => index !== indexToRemove)
       );
     }
   };
 
-  const pushValue = (type: any) => {
+  const pushValue = (type: string) => {
     if (type === "image") {
       setListUrl((prevUrls: any) => [...prevUrls, imageUrl]);
       setImageUrl("");
@@ -132,18 +132,11 @@ const UpdateProduct = () => {
         image: colorImage,
       };
 
-      setListColor((prevUrls: any) => [...prevUrls, data]);
+      setListColor((prevColors: any) => [...prevColors, data]);
       setColor("");
       setColorImage("");
-      // for (let i = 0; i <= 555; i++) {
-      //   let formattedNumber = i.toString().padStart(0, "0");
-      //   setListColor((prevUrls) => [...prevUrls, formattedNumber]);
-      // }
-
-      // console.log(listColor);
     }
   };
-
   return (
     <div
       className={`bg-[rgba(0,0,0,0.3)] w-full 

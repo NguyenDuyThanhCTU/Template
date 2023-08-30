@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import Input from "../../../Item/Input";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { notification } from "antd";
@@ -10,31 +9,29 @@ import { uploadImage } from "../../../Item/Handle";
 
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
-const UploadPost = () => {
-  const [Title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+const UploadPost: React.FC = () => {
+  const [Title, setTitle] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const { setDropDown, setIsRefetch } = useStateProvider();
   const { setUpdateId } = useData();
 
-  const HandleUploadImage = (e: InputChangeEvent, locate: string) => {
+  const HandleUploadImage = (e: InputChangeEvent, locate: string): void => {
     uploadImage(e, locate).then((data: any) => {
       setImageUrl(data);
     });
   };
 
-  const HandleDiscard = () => {
+  const HandleDiscard = (): void => {
     setImageUrl("");
-
     setTitle("");
   };
 
-  const HandleContinue = () => {
+  const HandleContinue = (): void => {
     if (!Title || !imageUrl) {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: `
-      Vui lòng nhập thông tin trước khi THÊM NỘI DUNG !`,
+        description: `Vui lòng nhập thông tin trước khi THÊM NỘI DUNG !`,
       });
     } else {
       const data = {
@@ -43,10 +40,9 @@ const UploadPost = () => {
         content: "",
       };
       addDocument("posts", data).then((data) => {
-        notification["success"]({
+        notification.success({
           message: "Thành công!",
-          description: `
-        Thông tin đã được CẬP NHẬT !`,
+          description: `Thông tin đã được CẬP NHẬT !`,
         });
 
         setUpdateId(data);
@@ -133,10 +129,9 @@ const UploadPost = () => {
               <div
                 className="px-10 py-3 rounded-xl border-2 border-blue-500 bg-blue-500 text-white hover:bg-blue-700 duration-300 hover:border-blue-700 cursor-pointer"
                 onClick={() => {
-                  notification["warning"]({
+                  notification.warning({
                     message: "Warning",
-                    description: `
-                  Hình ảnh trống hoặc đang tải lên !`,
+                    description: `Hình ảnh trống hoặc đang tải lên !`,
                   });
                 }}
               >

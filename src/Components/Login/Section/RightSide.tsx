@@ -1,6 +1,6 @@
 import React from "react";
 
-export const RightSide = () => {
+export const RightSide: React.FC = () => {
   return (
     <div className="d:flex flex-1 p:hidden ">
       <div className="overflow-hidden h-full">

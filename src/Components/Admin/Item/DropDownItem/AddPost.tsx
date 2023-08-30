@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
-
 import { useStateProvider } from "../../../../Context/StateProvider";
 import { updateDocument } from "../../../../Config/Services/Firebase/FireStoreDB";
-
 import { notification } from "antd";
 import { useData } from "../../../../Context/DataProviders";
-import { useEffect } from "react";
 import TextEditor from "../../../Item/TextEditor";
 
-const AddPost = () => {
-  const [editorData, setEditorData] = useState("");
+const AddPost: React.FC = () => {
+  const [editorData, setEditorData] = useState<string>("");
   const [PostSort, setPost] = useState<any>();
   const { setIsRefetch, setDropDown } = useStateProvider();
   const { UpdateId, Posts } = useData();
 
   useEffect(() => {
     const sort = Posts.filter((item: any) => item.id === UpdateId);
-    if (sort) {
+    if (sort.length > 0) {
       setPost(sort[0]);
     }
   }, [Posts, UpdateId]);
@@ -28,32 +25,28 @@ const AddPost = () => {
 
   const HandleSubmit = () => {
     if (!editorData) {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: `
-      Vui lòng nhập thông tin trước khi TẢI LÊN !`,
+        description: "Vui lòng nhập thông tin trước khi TẢI LÊN !",
       });
     } else {
       const data = {
         ...(editorData && { content: editorData }),
       };
       updateDocument("posts", UpdateId, data).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Thành công !",
-          description: `
-          Tải lên thành công !`,
+          description: "Tải lên thành công !",
         });
         HandleDiscard();
         setIsRefetch("add posts");
       });
     }
   };
-  console.log(editorData);
+
   return (
     <div
-      className={`bg-[rgba(0,0,0,0.3)] w-full flex items-center justify-center 
-       h-full
-      z-50 absolute rounded-md duration-300 `}
+      className={`bg-[rgba(0,0,0,0.3)] w-full flex items-center justify-center h-full z-50 absolute rounded-md duration-300 `}
     >
       <div className="w-[80vw] h-[75vh] relative bg-white flex font-LexendDeca cursor-pointer rounded-sm ">
         <div className="items-center justify-center  w-full flex  ">
@@ -64,9 +57,9 @@ const AddPost = () => {
 
             <div className=" w-[60vw] mx-auto overflow-y-auto h-[500px] ">
               <TextEditor
-                editorData={`${
+                editorData={
                   PostSort?.content ? `${PostSort?.content}` : `${editorData}`
-                }`}
+                }
                 setEditorData={setEditorData}
               />
             </div>

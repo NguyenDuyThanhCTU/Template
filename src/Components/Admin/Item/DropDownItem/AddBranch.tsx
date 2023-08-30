@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
-
 import { notification } from "antd";
-
 import Input from "../Input";
-
 import { useStateProvider } from "../../../../Context/StateProvider";
-import {
-  addDocument,
-  delDocument,
-} from "../../../../Config/Services/Firebase/FireStoreDB";
+import { addDocument } from "../../../../Config/Services/Firebase/FireStoreDB";
 import { useData } from "../../../../Context/DataProviders";
 
-const AddBranch = () => {
-  const [BranchName, setBranchName] = useState<string>();
-  const [BranchAddress, setBranchAddress] = useState<string>();
-  const [BranchHotline, setBranchHotline] = useState<string>();
-  const [BranchEmail, setBranchEmail] = useState<string>();
-  const [BranchLocation, setBranchLocation] = useState<string>();
+interface BranchData {
+  name: string;
+  address: string;
+  hotline: string;
+  email: string;
+  location: string;
+}
+
+const AddBranch: React.FC = () => {
+  const [BranchName, setBranchName] = useState<string>("");
+  const [BranchAddress, setBranchAddress] = useState<string>("");
+  const [BranchHotline, setBranchHotline] = useState<string>("");
+  const [BranchEmail, setBranchEmail] = useState<string>("");
+  const [BranchLocation, setBranchLocation] = useState<string>("");
   const { setIsRefetch, setDropDown } = useStateProvider();
   const { Branches } = useData();
 
@@ -31,13 +33,12 @@ const AddBranch = () => {
 
   const HandleSubmit = () => {
     if (!BranchName || !BranchAddress || !BranchHotline || !BranchEmail) {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: `
-            Vui lòng nhập đầy đủ thông tin!`,
+        description: "Vui lòng nhập đầy đủ thông tin!",
       });
     } else {
-      const data = {
+      const data: BranchData = {
         name: BranchName,
         address: BranchAddress,
         hotline: BranchHotline,
@@ -46,10 +47,9 @@ const AddBranch = () => {
       };
 
       addDocument("branches", data).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Thành công!",
-          description: `
-        Thông tin đã được CẬP NHẬT !`,
+          description: "Thông tin đã được CẬP NHẬT !",
         });
         setIsRefetch("add branch");
         handleDiscard();

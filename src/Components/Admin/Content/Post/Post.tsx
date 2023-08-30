@@ -2,7 +2,7 @@ import React from "react";
 import ListPost from "./Section/ListPost";
 import UploadPost from "./Section/UploadPost";
 
-const Post = () => {
+const Post: React.FC = () => {
   return (
     <div className="flex flex-col justify-between h-full w-full relative ">
       <div className="ml-3 mb-2 bg-[#353535] shadow-gray-700 p-5 rounded-xl">

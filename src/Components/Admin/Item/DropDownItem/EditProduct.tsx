@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { AiFillCloseCircle, AiOutlineDelete } from "react-icons/ai";
-
+import { AiFillCloseCircle } from "react-icons/ai";
 import { notification } from "antd";
-
 import { useStateProvider } from "../../../../Context/StateProvider";
 import { useData } from "../../../../Context/DataProviders";
-
 import TextEditor from "../../../Item/TextEditor";
 import { updateDocument } from "../../../../Config/Services/Firebase/FireStoreDB";
 
-const EditProduct = ({}) => {
-  const [discount, setDiscount] = useState(0);
-  const [newPrice, setNewPrice] = useState(0);
-  const [productStatus, setProductStatus] = useState("Còn hàng");
-  const [DataSort, setDataSort] = useState();
-  const [editorData, setEditorData] = useState("");
-  const { setIsUploadProduct, setIsRefetch } = useStateProvider();
-  const { Products, updateId } = useData();
+const EditProduct: React.FC = () => {
+  const [discount, setDiscount] = useState<number>(0);
+  const [newPrice, setNewPrice] = useState<number>(0);
+  const [productStatus, setProductStatus] = useState<string>("Còn hàng");
+  const [DataSort, setDataSort] = useState<any>();
+  const [editorData, setEditorData] = useState<string>("");
+
+  const { setDropDown, setIsRefetch } = useStateProvider();
+  const { Products, UpdateId } = useData();
 
   useEffect(() => {
-    const sort = Products.filter((item) => item.id === updateId);
+    const sort = Products.filter((item: any) => item.id === UpdateId);
 
-    if (sort) {
+    if (sort.length > 0) {
       setDataSort(sort[0]);
     }
-  }, [Products, updateId]);
+  }, [Products, UpdateId]);
 
   const calculateNewPrice = () => {
     if (discount === 0) {
@@ -54,7 +52,7 @@ const EditProduct = ({}) => {
       ...(editorData && { detail: editorData }),
     };
 
-    updateDocument("products", updateId, data).then(() => {
+    updateDocument("products", UpdateId, data).then(() => {
       notification["success"]({
         message: "Tải lên thành công!",
         description: `Sản phẩm của bạn đã được cập nhật !`,
@@ -82,8 +80,8 @@ const EditProduct = ({}) => {
               <div className=" border-dashed rounded-xl border-4 border-gray-200 flex flex-col justify-center items-center  outline-none mt-5 w-[260px] h-[458px] p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100">
                 <div className="overflow-y-auto border rounded-xl w-full  h-[400px] mt-5">
                   <div className="p-1">
-                    {DataSort?.image.map((items, idx) => (
-                      <div className=" ">
+                    {DataSort?.image.map((items: any, idx: number) => (
+                      <div key={idx}>
                         <div className="my-2 relative w-[145px] h-[90px] group">
                           <img
                             src={items}
@@ -98,7 +96,7 @@ const EditProduct = ({}) => {
               </div>
             </div>
             <div className="flex items-center gap-10">
-              <div class=" w-[700px] flex flex-col  items-center ">
+              <div className=" w-[700px] flex flex-col  items-center ">
                 <div className=" w-full grid grid-cols-2 gap-5 h-[400px]">
                   <div className="  flex flex-col gap-10 ">
                     <div className="p-2">
@@ -200,7 +198,7 @@ const EditProduct = ({}) => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

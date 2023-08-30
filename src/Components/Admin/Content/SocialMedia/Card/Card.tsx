@@ -4,7 +4,24 @@ import { FiEdit } from "react-icons/fi";
 import { MdDeleteForever } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
 
-const Card = ({
+interface IconProps {
+  className?: string;
+}
+
+interface CardProps {
+  title: string;
+  Icon?: React.ComponentType<IconProps>;
+  image: string;
+  style: string;
+  setSelected: React.Dispatch<React.SetStateAction<number | undefined>>;
+  idx: number;
+  setChange: React.Dispatch<React.SetStateAction<string>>;
+  isSelected: number | undefined;
+  HandleUpdate: (idx: number) => void;
+  placeholder: string;
+}
+
+const Card: React.FC<CardProps> = ({
   title,
   Icon,
   image,
@@ -15,7 +32,7 @@ const Card = ({
   isSelected,
   HandleUpdate,
   placeholder,
-}: any) => {
+}) => {
   return (
     <div className="py-3 flex flex-col gap-5 bg-[#353535] rounded-md justify-between shadow-xl cursor-pointer hover:shadow-slate-600 duration-300">
       <div className="">
@@ -34,8 +51,6 @@ const Card = ({
       <div className="mx-2 ">
         <div className="flex justify-between items-center mb-4">
           <h3 className="italic">{title}</h3>
-          {/* <h3 className="text-blue-400 uppercase font-bold">Cập nhật</h3> */}
-
           <div className="group relative mr-2">
             <SlOptionsVertical className=" hover:scale-125 duration-300 " />
             <div className="w-[80px] bg-white opacity-90 absolute -top-2 h-8 right-5 rounded-lg hidden group-hover:block ">
@@ -63,7 +78,7 @@ const Card = ({
         </div>
         <div className="" onClick={() => setSelected(idx)}>
           <input
-            type="text "
+            type="text"
             placeholder={placeholder}
             className="outline-none text-black py-2 px-3 rounded-md w-full"
             onChange={(e) => setChange(e.target.value)}
@@ -71,22 +86,16 @@ const Card = ({
         </div>
       </div>
       {isSelected === idx ? (
-        <>
-          {" "}
-          <div
-            className="text-center duration-300 uppercase py-2 border mx-2 bg-purple hover:bg-purpleAdmin hover:text-purpleHover hover:border-purpleHover text-blueAdmin border-blueAdmin "
-            onClick={() => HandleUpdate(idx)}
-          >
-            Cập nhật
-          </div>
-        </>
+        <div
+          className="text-center duration-300 uppercase py-2 border mx-2 bg-purple hover:bg-purpleAdmin hover:text-purpleHover hover:border-purpleHover text-blueAdmin border-blueAdmin "
+          onClick={() => HandleUpdate(idx)}
+        >
+          Cập nhật
+        </div>
       ) : (
-        <>
-          {" "}
-          <div className="text-center duration-300 uppercase py-2 border mx-2 bg-purple  ">
-            Cập nhật
-          </div>
-        </>
+        <div className="text-center duration-300 uppercase py-2 border mx-2 bg-purple  ">
+          Cập nhật
+        </div>
       )}
     </div>
   );

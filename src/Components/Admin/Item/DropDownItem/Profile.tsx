@@ -1,28 +1,31 @@
 import React, { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { getStorage } from "firebase/storage";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { notification } from "antd";
 
 import { useStateProvider } from "../../../../Context/StateProvider";
 import { updateDocument } from "../../../../Config/Services/Firebase/FireStoreDB";
 import { useData } from "../../../../Context/DataProviders";
+import { Input } from "antd";
 
-const Profile = () => {
-  const { setIsUploadProduct } = useStateProvider();
+const Profile: React.FC = () => {
+  const { setDropDown } = useStateProvider();
   const { HeaderAdmin } = useData();
-  const [Data, setData] = useState("");
-  const [isSelected, setSelected] = useState(false);
-  const [error, setError] = useState(false);
-  const [AvatarUrl, setAvatarUrl] = useState();
+  const [Data, setData] = useState<string>("");
+  const [isSelected, setSelected] = useState<number | null>(null);
+  const [error, setError] = useState<boolean>(false);
+  const [AvatarUrl, setAvatarUrl] = useState<string | undefined>();
 
   const handleDiscard = () => {
     setData("");
-    setAvatarUrl();
+    setAvatarUrl(undefined);
   };
 
-  const uploadImage = async (e, type) => {
-    let selectImage = e.target.files[0];
+  const uploadImage = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: number
+  ) => {
+    let selectImage = e.target.files![0];
     const filetypes = ["image/jpeg", "image/jpg", "image/png"];
 
     if (filetypes.includes(selectImage.type)) {
@@ -52,31 +55,30 @@ const Profile = () => {
   const ContactTrademark = [
     {
       name: "Tên hiển thị",
-      type: "input",
+      type: Input,
       placeholder: HeaderAdmin.displayName,
     },
     {
       name: "Ảnh đại diện",
-      type: "input",
+      type: Input,
       placeholder: HeaderAdmin.photoURL,
     },
   ];
 
-  const HandleUpdate = (idx) => {
+  const HandleUpdate = (idx: number) => {
     if (!Data && !AvatarUrl) {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: `
-        Vui lòng nhập thông tin trước khi CẬP NHẬT !`,
+        description: "Vui lòng nhập thông tin trước khi CẬP NHẬT !",
       });
     } else {
-      let newData;
+      let newData: object = {};
       if (idx === 0) {
         newData = { displayName: Data };
-        HeaderAdmin.displayName = Data;
+        HeaderAdmin.displayName = Data!;
       } else if (idx === 1) {
         newData = { photoURL: `${Data ? Data : AvatarUrl}` };
-        HeaderAdmin.photoURL = Data;
+        HeaderAdmin.photoURL = Data!;
       }
       let DocumentName;
       if (HeaderAdmin.email) {
@@ -86,21 +88,19 @@ const Profile = () => {
       }
 
       updateDocument(DocumentName, HeaderAdmin.id, newData).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Thành công !",
-          description: `
-            Thông tin đã được CẬP NHẬT !`,
+          description: "Thông tin đã được CẬP NHẬT !",
         });
         handleDiscard();
-        setIsUploadProduct("");
+        setDropDown("");
       });
     }
   };
+
   return (
     <div
-      className={`bg-[rgba(0,0,0,0.3)] w-full 
-       h-full
-      z-50 absolute rounded-md duration-300`}
+      className={`bg-[rgba(0,0,0,0.3)] w-full h-full z-50 absolute rounded-md duration-300`}
     >
       <div className=" p:w-full p:h-full  d:w-[1500px] d:h-[700px] absolute bg-white d:bottom-[15%] d:left-[12%] p:bottom-0 p:left-0 flex font-LexendDeca cursor-pointer rounded-sm ">
         <div className="flex justify-center w-full items-center gap-10 d:flex-row p:flex-col ">
@@ -116,7 +116,7 @@ const Profile = () => {
                 <input
                   type="file"
                   className="w-0 h-0"
-                  onChange={(e) => uploadImage(e)}
+                  onChange={(e) => uploadImage(e, 1)}
                 />
               </div>
             </label>
@@ -145,7 +145,7 @@ const Profile = () => {
             {ContactTrademark.map((items, idx) => {
               let Type = items.type;
               return (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3" key={idx}>
                   <label>{items.name}</label>
                   <div className="flex gap-5">
                     {Type && (
@@ -181,7 +181,7 @@ const Profile = () => {
         <AiFillCloseCircle
           className="absolute d:-top-5 d:-right-5 p:top-0 p:right-0 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

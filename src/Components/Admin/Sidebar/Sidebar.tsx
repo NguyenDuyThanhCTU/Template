@@ -7,7 +7,7 @@ import {
   WebsiteSidebarAdmin,
 } from "../../../Utils/item";
 // import { notification } from "antd";
-const Sidebar = ({}) => {
+const Sidebar: React.FC = () => {
   const { isSelected, setSelected } = useStateProvider();
   // const HandleBlock = () => {
   //   notification["warning"]({

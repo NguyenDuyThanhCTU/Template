@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { LeftSide } from "./Section/LeftSide";
 import { RightSide } from "./Section/RightSide";
@@ -7,7 +6,7 @@ import { ChangePassword } from "./Section/ChangePassword";
 import Alert from "../Item/Alert";
 import Loading from "../Item/Loading";
 
-const Login = () => {
+const Login: React.FC = () => {
   const [Correct, setCorrect] = useState(false);
   const [Uncorrect, setUncorrect] = useState(false);
 

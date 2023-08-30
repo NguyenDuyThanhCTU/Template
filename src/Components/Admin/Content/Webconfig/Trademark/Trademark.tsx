@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { useData } from "../../../../../Context/DataProviders";
 import { notification } from "antd";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 import { updateDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
-import { getStorage } from "firebase/storage";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uploadImage } from "../../../Item/Handle";
 
-type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
+type TrademarkItem = {
+  name: string;
+  type: "input" | "textarea";
+  placeholder: string;
+};
 
-const Trademark = () => {
+const Trademark: React.FC = () => {
   const { TradeMarkData } = useData();
   const { setIsRefetch } = useStateProvider();
   const [Data, setData] = useState<string>("");
-  const [isSelected, setSelected] = useState<number>();
-  const [error, setError] = useState<boolean>(false);
+  const [isSelected, setSelected] = useState<number | undefined>();
   const [LogoUrl, setLogoUrl] = useState<string>("");
   const [IcoUrl, setIcoUrl] = useState<string>("");
 
@@ -25,7 +26,7 @@ const Trademark = () => {
   };
 
   const HandleUploadImage = (
-    e: ChangeEventType,
+    e: ChangeEvent<HTMLInputElement>,
     locate: string,
     type: string
   ) => {
@@ -37,7 +38,8 @@ const Trademark = () => {
       }
     });
   };
-  const ContactTrademark = [
+
+  const ContactTrademark: TrademarkItem[] = [
     {
       name: "Logo Website",
       type: "input",
@@ -50,7 +52,7 @@ const Trademark = () => {
     },
   ];
 
-  const ContactTrademark1 = [
+  const ContactTrademark1: TrademarkItem[] = [
     {
       name: "Tên website",
       type: "input",
@@ -63,15 +65,14 @@ const Trademark = () => {
     },
   ];
 
-  const HandleUpdate = (idx: any) => {
+  const HandleUpdate = (idx: number) => {
     if (!Data && !LogoUrl && !IcoUrl) {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: `
-        Vui lòng nhập thông tin trước khi CẬP NHẬT !`,
+        description: "Vui lòng nhập thông tin trước khi CẬP NHẬT !",
       });
     } else {
-      let newData: object = {};
+      let newData: { [key: string]: string } = {};
       if (idx === 0) {
         newData = { websiteLogo: Data };
       } else if (idx === 1) {
@@ -84,10 +85,9 @@ const Trademark = () => {
         newData = { websiteName: Data };
       }
       updateDocument("website", "Trademark", newData).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Thành công !",
-          description: `
-          Thông tin đã được CẬP NHẬT !`,
+          description: "Thông tin đã được CẬP NHẬT !",
         });
         HandleDiscard();
         setIsRefetch("trademark");
@@ -101,21 +101,18 @@ const Trademark = () => {
         <h3 className="text-[25px] text-center ">Thương hiệu website</h3>
 
         <div className="flex flex-col gap-3 w-full ">
-          {ContactTrademark1.map((items: any, idx: any) => {
-            let Type = items.type;
+          {ContactTrademark1.map((items, idx) => {
+            const Type = items.type === "input" ? "input" : "textarea";
             return (
-              <div>
+              <div key={idx}>
                 <label>{items.name}</label>
                 <div className="flex gap-5 p:flex-col d:flex-row w-full">
                   {Type && (
                     <div onClick={() => setSelected(idx)} className="w-full">
                       <Type
                         placeholder={items.placeholder}
-                        type="text"
                         className="px-4 py-2 text-black outline-none rounded-2xl bg-gray-300 w-full "
-                        onChange={(e: ChangeEventType) =>
-                          setData(e.target.value)
-                        }
+                        onChange={(e: any) => setData(e.target.value)}
                       />
                     </div>
                   )}
@@ -140,10 +137,10 @@ const Trademark = () => {
         </div>
 
         <div className="flex d:flex-row gap-3 mt-5 p:flex-col">
-          {ContactTrademark.map((items: any, idx) => {
-            let Type = items.type;
+          {ContactTrademark.map((items, idx) => {
+            const Type = items.type === "input" ? "input" : "textarea";
             return (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3" key={idx}>
                 <label>{items.name}</label>
                 <div className="flex gap-5 d:flex-row p:flex-col">
                   {Type && (
@@ -153,11 +150,8 @@ const Trademark = () => {
                     >
                       <Type
                         placeholder={items.placeholder}
-                        type="text"
                         className="px-4 py-2 text-black outline-none rounded-2xl bg-gray-300 w-full"
-                        onChange={(e: ChangeEventType) =>
-                          setData(e.target.value)
-                        }
+                        onChange={(e: any) => setData(e.target.value)}
                       />
                     </div>
                   )}
@@ -197,11 +191,7 @@ const Trademark = () => {
                 />
               </div>
             </label>
-            {error && (
-              <p className="text-center text-xl text-red-400 font-semibold mt-4 w-[260px]">
-                Vui lòng chọn đúng định dạng
-              </p>
-            )}
+
             {LogoUrl ? (
               <div className="w-full justify-center flex">
                 <button
@@ -235,11 +225,7 @@ const Trademark = () => {
                 />
               </div>
             </label>
-            {error && (
-              <p className="text-center text-xl text-red-400 font-semibold mt-4 w-[260px]">
-                Vui lòng chọn đúng định dạng
-              </p>
-            )}
+
             {IcoUrl ? (
               <div className="w-full justify-center flex">
                 <button

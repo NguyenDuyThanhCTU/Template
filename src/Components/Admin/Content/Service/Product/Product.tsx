@@ -1,7 +1,7 @@
 import React from "react";
 import ListProducts from "./Section/ListProducts";
 
-const Product = () => {
+const Product: React.FC = () => {
   return (
     <div>
       <div className="flex flex-col gap-10">

@@ -5,26 +5,27 @@ import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB
 import { notification } from "antd";
 import { useData } from "../../../../../Context/DataProviders";
 
-const Branch = () => {
+const Branch: React.FC = () => {
   const { setDropDown, setIsRefetch } = useStateProvider();
   const { Branches } = useData();
 
-  const HandleDelete = (id: string) => {
+  const HandleDelete = (id: string): void => {
     delDocument("branches", id).then(() => {
-      notification["success"]({
+      notification.success({
         message: "Success",
         description: `Yêu cầu của bạn đã được thực hiện thành công !`,
       });
     });
     setIsRefetch("deleted");
   };
+
   return (
-    <div className="d:h-screen p:h-auto font-Montserrat w-full">
+    <div className="h-screen p-h-auto font-Montserrat w-full">
       <div className="flex flex-col gap-5">
         <h3 className="text-[42px] font-light ">Danh sách chi nhánh</h3>
 
-        <div className=" font-NunitoSans p:grid-cols-1 border overflow-y-scroll h-[660px] w-full">
-          <div className="p-2 grid d:grid-cols-4 gap-5 grid-rows-2 ">
+        <div className="font-NunitoSans grid-cols-1 border overflow-y-scroll h-[660px] w-full">
+          <div className="grid d-grid-cols-4 gap-5 grid-rows-2 p-2">
             {Branches?.map((items: any, idx: number) => (
               <div className="rounded-sm shadow-2xl border" key={idx}>
                 <div className="p-4 flex flex-col justify-between h-full gap-3">
@@ -36,8 +37,11 @@ const Branch = () => {
                       <p className="font-bold">Địa chỉ</p>
                       {items.location && (
                         <>
-                          {" "}
-                          <a href={`https://${items.location}`} target="_blank">
+                          <a
+                            href={`https://${items.location}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <div className="flex items-center gap-2 text-blue-500 cursor-pointer">
                               <BiMapPin />
                               <p className="hover:underline">Vị trí</p>
@@ -58,7 +62,7 @@ const Branch = () => {
                     </div>
                   </div>
                   <div
-                    className=" text-blue-600 border border-blue-600 text-center py-3 cursor-pointer hover:text-white hover:border-white hover:bg-red-500 uppercase"
+                    className="text-blue-600 border border-blue-600 text-center py-3 cursor-pointer hover:text-white hover:border-white hover:bg-red-500 uppercase"
                     onClick={() => HandleDelete(items.id)}
                   >
                     Loại bỏ

@@ -1,11 +1,5 @@
-import React, { ChangeEvent, useState } from "react";
-
-import { AiOutlineCloudUpload } from "react-icons/ai";
-
-import { getStorage } from "firebase/storage";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import React, { useState } from "react";
 import { Empty, notification } from "antd";
-
 import ListSlide from "./ListSlide/ListSlide";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 import { addDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
@@ -14,11 +8,14 @@ import { uploadImage } from "../../../Item/Handle";
 
 type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
-const Section = ({ name }: any) => {
-  const [imageUrl, setImageUrl] = useState<string>("");
+interface SectionProps {
+  name: string;
+}
 
+const Section: React.FC<SectionProps> = ({ name }) => {
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [Data, setData] = useState<string>("");
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState<boolean>(false);
   const { setIsRefetch } = useStateProvider();
 
   const HandleUploadImage = (e: ChangeEventType, locate: string) => {
@@ -35,8 +32,7 @@ const Section = ({ name }: any) => {
     addDocument("slide", data).then(() => {
       notification["success"]({
         message: "Thành công !",
-        description: `
-        Thông tin đã được CẬP NHẬT !`,
+        description: "Thông tin đã được CẬP NHẬT !",
       });
       setIsRefetch("personal title");
       setSelected(false);
@@ -45,7 +41,7 @@ const Section = ({ name }: any) => {
   };
 
   return (
-    <div className=" rounded-xl">
+    <div className="rounded-xl">
       <div className="p-4 flex gap-5 border flex-col">
         <div className="flex items-center justify-start gap-2 ">
           <div className="h-1 w-[70px] bg-[#40b2b5] d:block p:hidden"></div>
@@ -54,7 +50,7 @@ const Section = ({ name }: any) => {
           </h3>
         </div>
         <div className="flex gap-5 d:flex-row p:flex-col ">
-          <div className="grid d:grid-cols-2 gap-10 cursor-pointer  h-[550px]  p-5 border p:grid-cols-1 flex-[70%]">
+          <div className="grid d:grid-cols-2 gap-10 cursor-pointer h-[550px] p-5 border p:grid-cols-1 flex-[70%]">
             <div className="shadow-2xl bg-[#353535] p:h-auto d:h-[300px] hover:shadow-gray-700 duration-300">
               <div className="w-auto p:h-auto d:h-[320px]">
                 <label className="cursor-pointer">
@@ -70,7 +66,6 @@ const Section = ({ name }: any) => {
                     <p className="text-gray-400  text-center mt-10 text-sm leading-10">
                       Định dạng jpg hoặc png <br />
                     </p>
-
                     <p className="bg-[#0047AB] hover:bg-[#0000FF] text-center mt-8 rounded text-white text-md font-medium p-2 w-52 outline-none">
                       Chọn từ thiết bị
                     </p>
@@ -83,7 +78,7 @@ const Section = ({ name }: any) => {
                   />
                 </label>
               </div>
-              <div className=" ml-3 ">
+              <div className="ml-3 ">
                 <h3 className="py-3 text-[25px] font-bold ">
                   Thay đổi hình ảnh
                 </h3>

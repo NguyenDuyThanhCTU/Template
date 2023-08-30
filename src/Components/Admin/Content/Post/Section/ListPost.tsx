@@ -6,14 +6,21 @@ import { Popconfirm, message, notification } from "antd";
 import { MdDeleteForever } from "react-icons/md";
 import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
 
-const ListPost = () => {
+interface PostData {
+  id: string;
+  title: string;
+  image: string;
+  daysSinceCreation: number;
+}
+
+const ListPost: React.FC = () => {
   const { setIsRefetch, setDropDown } = useStateProvider();
   const [isOption, setIsOption] = useState<number>(0);
   const { Posts, setUpdateId } = useData();
 
-  const HandleDelete = (id: string) => {
+  const HandleDelete = (id: string): void => {
     delDocument("posts", id).then(() => {
-      notification["success"]({
+      notification.success({
         message: "Thành công",
         description: `Bài viết đã được xóa !`,
       });
@@ -22,7 +29,7 @@ const ListPost = () => {
     setIsOption(0);
   };
 
-  const HandleOption = (idx: number) => {
+  const HandleOption = (idx: number): void => {
     if (idx === isOption) {
       setIsOption(0);
     } else {
@@ -30,7 +37,7 @@ const ListPost = () => {
     }
   };
 
-  const HandleEdit = (id: string) => {
+  const HandleEdit = (id: string): void => {
     setUpdateId(id);
     setDropDown("add-post");
     setIsOption(0);
@@ -45,7 +52,7 @@ const ListPost = () => {
           <p>hình ảnh</p>
         </div>
 
-        {Posts.map((data: any, idx: number) => {
+        {Posts.map((data: PostData, idx: number) => {
           return (
             <div key={data.id} className="grid grid-cols-4  py-4  items-center">
               <p>{idx + 1}</p>
@@ -62,14 +69,12 @@ const ListPost = () => {
                 <div>
                   {data.daysSinceCreation > 0 ? (
                     <div>
-                      {" "}
                       <p className="text-[12px] w-[85px] truncate  py-1 border px-2 rounded-3xl text-orange-300 border-orange-300">
                         {data.daysSinceCreation} ngày trước
                       </p>
                     </div>
                   ) : (
                     <>
-                      {" "}
                       <p className="text-[12px] w-[65px] truncate  border px-2 py-1 rounded-3xl text-green-300 border-green-300">
                         Bây giờ
                       </p>

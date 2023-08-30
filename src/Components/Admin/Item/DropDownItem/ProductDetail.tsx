@@ -2,26 +2,24 @@ import React, { useEffect, useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useStateProvider } from "../../../../Context/StateProvider";
 import { useData } from "../../../../Context/DataProviders";
-import { getDocumentById } from "../../../../Config/Services/Firebase/FireStoreDB";
 
-const ProductDetail = () => {
-  const { setIsUploadProduct } = useStateProvider();
-  const { detailOrders } = useData();
-  const [Data, setData] = useState();
+const ProductDetail: React.FC = () => {
+  const { setDropDown } = useStateProvider();
+  const { UpdateId, Orders } = useData();
+  const [Data, setData] = useState<any>();
 
   useEffect(() => {
-    getDocumentById("orders", detailOrders).then((data) => {
-      setData(data);
-    });
-  }, [detailOrders]);
+    const order = Orders.filter((item: any) => item.id === UpdateId);
+    if (order) {
+      setData(order[0]);
+    }
+  }, [Orders, UpdateId]);
 
   return (
     <div
-      className={`bg-[rgba(0,0,0,0.3)] w-full 
-   h-full
-  z-50 absolute rounded-md duration-300`}
+      className={`bg-[rgba(0,0,0,0.3)] w-full h-full z-50 absolute rounded-md duration-300`}
     >
-      <div className="w-[1500px] h-[700px] absolute bg-white bottom-[15%] left-[12%]  font-LexendDeca cursor-pointer rounded-sm flex  justify-center items-start     ">
+      <div className="w-[1500px] h-[700px] absolute bg-white bottom-[15%] left-[12%]  font-LexendDeca cursor-pointer rounded-sm flex  justify-center items-start">
         <div className="flex gap-20 mt-20">
           <div className="flex flex-col gap-5 ">
             <h3 className="text-center text-[32px]">Sản phẩm</h3>
@@ -55,14 +53,12 @@ const ProductDetail = () => {
               <h3>Thời gian đặt hàng:</h3>
               {Data?.daysSinceCreation > 0 ? (
                 <div>
-                  {" "}
                   <p className="text-[12px] w-[85px] truncate  py-1 border px-2 rounded-3xl text-orange-300 border-orange-300">
                     {Data?.daysSinceCreation} ngày trước
                   </p>
                 </div>
               ) : (
                 <>
-                  {" "}
                   <p className="text-[12px] w-[65px] truncate  border px-2 py-1 rounded-3xl text-green-300 border-green-300">
                     Bây giờ
                   </p>
@@ -75,7 +71,7 @@ const ProductDetail = () => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

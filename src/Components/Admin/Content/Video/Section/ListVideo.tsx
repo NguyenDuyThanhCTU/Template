@@ -7,8 +7,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { delDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 
-const ListVideo = () => {
-  const [Option, setOption] = useState<number>();
+const ListVideo: React.FC = () => {
+  const [Option, setOption] = useState<number | undefined>();
   const { Videos } = useData();
   const { setIsRefetch } = useStateProvider();
 
@@ -19,6 +19,7 @@ const ListVideo = () => {
       setOption(idx);
     }
   };
+
   const HandleDelete = (id: string) => {
     delDocument("videos", id).then(() => {
       notification["success"]({
@@ -28,6 +29,7 @@ const ListVideo = () => {
     });
     setIsRefetch("deleted");
   };
+
   return (
     <div className="h-[400px] border  rounded-2xl overflow-y-scroll flex-[70%] ">
       {Videos?.map((data: any, idx: number) => (

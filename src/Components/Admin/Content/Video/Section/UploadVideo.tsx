@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getStorage } from "firebase/storage";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { notification } from "antd";
 import { useStateProvider } from "../../../../../Context/StateProvider";
 import { addDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
 import Input from "../../../Item/Input";
 
-const UploadVideo = () => {
-  const [videoUrl, setVideoUrl] = useState("");
-  const [embedUrl, setEmbedUrl] = useState("");
+const UploadVideo: React.FC = () => {
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [embedUrl, setEmbedUrl] = useState<string>("");
   const { setIsRefetch } = useStateProvider();
 
-  const getVideoId = (url: string) => {
+  const getVideoId = (url: string): string | null => {
     const match = url.match(
       /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/|v\/|u\/\w\/|embed\/?\??(?:\w*=\w*)*)?([\w-]{11})/
     );
@@ -19,10 +17,10 @@ const UploadVideo = () => {
   };
 
   useEffect(() => {
-    function checkurl() {
+    function checkUrl() {
       const videoId = getVideoId(videoUrl);
       if (!videoId) {
-        return <p>Invalid YouTube link</p>;
+        return;
       } else {
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         if (embedUrl) {
@@ -30,7 +28,7 @@ const UploadVideo = () => {
         }
       }
     }
-    checkurl();
+    checkUrl();
   }, [videoUrl]);
 
   const HandleDiscard = () => {
@@ -40,7 +38,7 @@ const UploadVideo = () => {
 
   const HandleUpload = () => {
     if (!videoUrl || !embedUrl) {
-      notification["error"]({
+      notification.error({
         message: "Tải lên không thành công!",
         description: `Vui lòng bổ sung đầy đủ thông tin !`,
       });
@@ -49,7 +47,7 @@ const UploadVideo = () => {
         embedurl: embedUrl,
       };
       addDocument("videos", data).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Tải lên thành công!",
           description: `Sản phẩm của bạn đã được tải lên !`,
         });
@@ -59,6 +57,7 @@ const UploadVideo = () => {
       });
     }
   };
+
   return (
     <div className="  flex-[30%] flex flex-col gap-5">
       <div className="flex flex-col p-3 border items-center">

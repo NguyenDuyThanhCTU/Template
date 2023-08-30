@@ -1,5 +1,11 @@
 // MENU LV3
+import React from "react";
 
+const AddChildrenType = () => {
+  return <div>AddChildrenType</div>;
+};
+
+export default AddChildrenType;
 // import React, { useEffect, useState } from "react";
 // import { AiFillCloseCircle } from "react-icons/ai";
 

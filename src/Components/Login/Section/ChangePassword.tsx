@@ -7,7 +7,13 @@ import { notification } from "antd";
 import { useData } from "../../../Context/DataProviders";
 import { useStateProvider } from "../../../Context/StateProvider";
 
-export const ChangePassword = ({ setIsChangePasswords }: any) => {
+interface ChangePasswordProps {
+  setIsChangePasswords: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const ChangePassword: React.FC<ChangePasswordProps> = ({
+  setIsChangePasswords,
+}) => {
   const [errorMessage, setErrorMessage] = useState(false);
   const [Hide, setHide] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -42,6 +48,7 @@ export const ChangePassword = ({ setIsChangePasswords }: any) => {
       }
     }
   };
+
   return (
     <div className="flex-1  m-5 mt-8 mb-2 flex-col flex items-center justify-center  relative">
       <SlArrowLeft

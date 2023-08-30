@@ -11,12 +11,17 @@ import { useData } from "../../../Context/DataProviders";
 import Verify from "./Item/Verify";
 import { useStateProvider } from "../../../Context/StateProvider";
 
-export const LeftSide = ({
+interface LeftSideProps {
+  setCorrect: React.Dispatch<React.SetStateAction<boolean>>;
+  setUncorrect: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChangePasswords: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const LeftSide: React.FC<LeftSideProps> = ({
   setCorrect,
   setUncorrect,
-
   setIsChangePasswords,
-}: any) => {
+}) => {
   const [errorMessage, setErrorMessage] = useState(false);
   const [Hide, setHide] = useState(false);
   const [Username, setUsername] = useState("");
@@ -35,7 +40,7 @@ export const LeftSide = ({
     } else {
       notification["error"]({
         message: "Lỗi !",
-        description: ` 
+        description: `
         Vui lòng nhập tài khoản QUẢN TRỊ vào ô Tài khoản(*) !`,
       });
     }
@@ -157,7 +162,6 @@ export const LeftSide = ({
             />
           )}
         </div>
-
         <p
           className={`text-red-600 font-normal ml-2 ${
             errorMessage ? "block " : "hidden"

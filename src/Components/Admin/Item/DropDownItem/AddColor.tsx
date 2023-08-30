@@ -1,5 +1,11 @@
 //Custom
+import React from "react";
 
+const AddColor = () => {
+  return <div>AddColor</div>;
+};
+
+export default AddColor;
 // import React, { useEffect, useState } from "react";
 // import { AiFillCloseCircle } from "react-icons/ai";
 

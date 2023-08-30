@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import { useData } from "../../../../../Context/DataProviders";
+import React, { useState, ChangeEvent } from "react";
 import { notification } from "antd";
 import { updateDocument } from "../../../../../Config/Services/Firebase/FireStoreDB";
 import { useStateProvider } from "../../../../../Context/StateProvider";
+import { useData } from "../../../../../Context/DataProviders";
 
-type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
+type ContactDashboardItem = {
+  name: string;
+  type: "input" | "textarea";
+  placeholder: string;
+};
 
-const Contact = () => {
+const Contact: React.FC = () => {
   const { setIsRefetch } = useStateProvider();
-  const [Data, setData] = useState("");
+  const [Data, setData] = useState<string>("");
   const { ContactData } = useData();
-  const [isSelected, setSelected] = useState();
+  const [isSelected, setSelected] = useState<number | undefined>();
 
-  const ContactDashboard = [
+  const ContactDashboard: ContactDashboardItem[] = [
     {
       name: "Số điện thoại",
       type: "input",
@@ -38,7 +42,6 @@ const Contact = () => {
       type: "textarea",
       placeholder: ContactData.address,
     },
-
     {
       name: "Vị trí",
       type: "input",
@@ -48,13 +51,12 @@ const Contact = () => {
 
   const HandleUpdate = (idx: number) => {
     if (Data === "") {
-      notification["error"]({
+      notification.error({
         message: "Lỗi !",
-        description: ` 
-        Vui lòng nhập thông tin trước khi CẬP NHẬT !`,
+        description: "Vui lòng nhập thông tin trước khi CẬP NHẬT !",
       });
     } else {
-      let newData: object = {};
+      let newData: { [key: string]: string } = {};
       if (idx === 0) {
         newData = { phone: Data };
       } else if (idx === 1) {
@@ -70,10 +72,9 @@ const Contact = () => {
       }
 
       updateDocument("website", "Contact", newData).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Thành công !",
-          description: `
-          Thông tin đã được CẬP NHẬT !`,
+          description: "Thông tin đã được CẬP NHẬT !",
         });
         setIsRefetch("contact");
       });
@@ -85,21 +86,20 @@ const Contact = () => {
       <div className="p-4  ">
         <h3 className="text-[25px] text-center ">Thông tin website</h3>
         <div className="flex flex-col gap-3 mt-5">
-          {ContactDashboard.map((items: any, idx: any) => {
-            let Type = items.type;
+          {ContactDashboard.map((items, idx) => {
+            const Type = items.type === "input" ? "input" : "textarea";
             return (
-              <>
+              <React.Fragment key={idx}>
                 <label>{items.name}</label>
                 <div className="flex gap-5 p:flex-col d:flex-row w-full">
                   {Type && (
                     <div onClick={() => setSelected(idx)}>
                       <Type
                         placeholder={items.placeholder}
-                        type="text"
                         className="px-4 py-2 text-black outline-none rounded-2xl bg-gray-300 d:w-[240px] p:w-full "
-                        onChange={(e: InputChangeEvent) =>
-                          setData(e.target.value)
-                        }
+                        onChange={(
+                          e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                        ) => setData(e.target.value)}
                       />
                     </div>
                   )}
@@ -118,7 +118,7 @@ const Contact = () => {
                     )}
                   </div>
                 </div>
-              </>
+              </React.Fragment>
             );
           })}
           <iframe
@@ -127,6 +127,7 @@ const Contact = () => {
             width="300"
             height="200"
             loading="lazy"
+            title="Map Location"
           ></iframe>
         </div>
       </div>

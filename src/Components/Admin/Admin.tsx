@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import Content from "../Admin/Content/Content";
 import AdminDropDown from "./Item/AdminDropDown";
 
-const Admin = () => {
+const Admin: React.FC = () => {
   const { verify } = useAuth();
 
   const [Hidden, setHidden] = useState(true);
@@ -17,6 +17,7 @@ const Admin = () => {
     if (!verify) {
       navigate("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

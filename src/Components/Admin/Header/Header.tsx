@@ -3,12 +3,17 @@ import Clock from "./Clock/Clock";
 import { useData } from "../../../Context/DataProviders";
 import HeaderDropDown from "../Item/HeaderDropdown";
 
-const Header = ({ setHidden, Hidden }: any) => {
+interface HeaderProps {
+  setHidden: (hidden: boolean) => void;
+  Hidden: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ setHidden, Hidden }) => {
   const { HeaderAdmin } = useData();
   const [Option, setOption] = useState(false);
 
   return (
-    <div className=" h-[7vh] bg-Blue3D font-LexendDeca text-white flex w-full ">
+    <div className="h-[7vh] bg-Blue3D font-LexendDeca text-white flex w-full ">
       <div className="d:flex justify-between w-full mx-10 items-center relative p:hidden">
         <div className="flex gap-32 cursor-pointer">
           <div className="flex items-center">

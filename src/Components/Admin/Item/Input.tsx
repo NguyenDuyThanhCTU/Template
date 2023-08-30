@@ -1,10 +1,10 @@
 import React from "react";
 
-const Input = ({ text, Value, setValue, Input, PlaceHolder }) => {
+const Input = ({ text, Value, setValue, Input, PlaceHolder }: any) => {
   return (
     <div className="w-full">
-      <div class="mb-5">
-        <label class="block  text-sm font-bold mb-2">{text}</label>
+      <div className="mb-5">
+        <label className="block  text-sm font-bold mb-2">{text}</label>
 
         {Input ? (
           <>

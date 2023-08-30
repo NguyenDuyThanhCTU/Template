@@ -5,7 +5,7 @@ import { Popconfirm, message, notification } from "antd";
 
 import Input from "../Input";
 import { FiEdit } from "react-icons/fi";
-import { FcAddDatabase, FcViewDetails } from "react-icons/fc";
+import { FcAddDatabase } from "react-icons/fc";
 import { MdDeleteForever } from "react-icons/md";
 import { useData } from "../../../../Context/DataProviders";
 import { useStateProvider } from "../../../../Context/StateProvider";
@@ -14,18 +14,21 @@ import {
   delDocument,
 } from "../../../../Config/Services/Firebase/FireStoreDB";
 import { TypeProductItems } from "../../../../Utils/item";
-import diacritic from "diacritic";
+
 import { uploadImage } from "../Handle";
+import diacritic from "diacritic";
 
-const AddType = () => {
-  const [Name, setName] = useState("");
-  const [Params, setIsParams] = useState("");
-  const [Parent, setParent] = useState("Cửa hàng");
-  const [ParentParams, setParentParams] = useState("cua-hang");
+type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
-  const [imageUrl, setImageUrl] = useState("");
-  const [isSelected, setSelected] = useState(false);
-  const { setIsRefetch, setIsUploadProduct } = useStateProvider();
+const AddType: React.FC = () => {
+  const [Name, setName] = useState<string>("");
+  const [Params, setIsParams] = useState<string>("");
+  const [Parent, setParent] = useState<string>("Cửa hàng");
+  const [ParentParams, setParentParams] = useState<string>("cua-hang");
+
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [isSelected, setSelected] = useState<number | undefined>();
+  const { setIsRefetch, setDropDown } = useStateProvider();
   const { productTypes, setUpdateId } = useData();
 
   const handleDiscard = () => {
@@ -64,7 +67,7 @@ const AddType = () => {
     }
   };
 
-  const HandleDelete = (id) => {
+  const HandleDelete = (id: string) => {
     delDocument("productTypes", id).then(() => {
       notification["success"]({
         message: "Success",
@@ -74,13 +77,13 @@ const AddType = () => {
     setIsRefetch("deleted");
   };
 
-  const HandleUploadImage = (e, locate) => {
-    uploadImage(e, locate).then((data) => {
+  const HandleUploadImage = (e: ChangeEventType, locate: string) => {
+    uploadImage(e, locate).then((data: any) => {
       setImageUrl(data);
     });
   };
 
-  const convertToCodeFormat = (text) => {
+  const convertToCodeFormat = (text: any) => {
     const textWithoutDiacritics = diacritic.clean(text);
     return textWithoutDiacritics.replace(/\s+/g, "-").toLowerCase();
   };
@@ -96,7 +99,7 @@ const AddType = () => {
     handleChange();
   }, [Name]);
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = e.target.value;
     setParent(selectedName);
     const selectedItem = TypeProductItems.find(
@@ -107,19 +110,18 @@ const AddType = () => {
     }
   };
 
-  const HandleAddChildren = (id) => {
+  const HandleAddChildren = (id: string) => {
     setUpdateId(id);
-    setIsUploadProduct("add-children-type");
+    setDropDown("add-children-type");
   };
 
-  const HandleSelected = (idx) => {
+  const HandleSelected = (idx: any) => {
     if (isSelected === idx) {
-      setSelected(0);
+      setSelected(undefined);
     } else {
       setSelected(idx);
     }
   };
-
   return (
     <div
       className={`bg-[rgba(0,0,0,0.3)] w-full flex items-center justify-center 
@@ -140,7 +142,7 @@ const AddType = () => {
                 <p>Thời gian</p>
               </div>
               <div className="w-full border border-black h-[300px] overflow-y-scroll">
-                {productTypes?.map((data, idx) => (
+                {productTypes?.map((data: any, idx: number) => (
                   <div
                     key={idx}
                     className="grid  cols-4 items-center  my-5  ml-1  px-5 "
@@ -212,7 +214,13 @@ const AddType = () => {
               </p>
 
               <div>
-                <Input text={`Tên danh mục`} Value={Name} setValue={setName} />
+                <Input
+                  text={`Tên danh mục`}
+                  Value={Name}
+                  setValue={setName}
+                  Input={true}
+                  PlaceHolder=""
+                />
                 <div className="flex   gap-2 items-center">
                   <div className="">
                     <Input
@@ -220,6 +228,7 @@ const AddType = () => {
                       Value={imageUrl}
                       setValue={setImageUrl}
                       Input={true}
+                      PlaceHolder=""
                     />
                   </div>
                   <p className="text-red-500 italic">Hoặc</p>
@@ -243,7 +252,9 @@ const AddType = () => {
                   </label>
                   <select
                     className="outline-none lg:w-650 border-2 border-gray-200 text-md capitalize lg:p-4 p-2 rounded cursor-pointer"
-                    onChange={handleTitleChange}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleTitleChange(e)
+                    }
                   >
                     {TypeProductItems.map((item, idx) => (
                       <option
@@ -282,7 +293,7 @@ const AddType = () => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>

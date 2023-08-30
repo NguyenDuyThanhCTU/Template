@@ -1,7 +1,7 @@
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getStorage } from "firebase/storage";
 
-export const uploadImage = async (e, locate) => {
+export const uploadImage = async (e: any, locate: any) => {
   try {
     let selectImage = e.target.files[0];
     const filetypes = ["image/jpeg", "image/jpg", "image/png"];

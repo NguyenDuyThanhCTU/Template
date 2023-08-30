@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillCloseCircle, AiOutlineDelete } from "react-icons/ai";
-import { FaCloudUploadAlt } from "react-icons/fa";
 
 import { notification } from "antd";
 
@@ -10,33 +9,32 @@ import { addDocument } from "../../../../Config/Services/Firebase/FireStoreDB";
 import { useData } from "../../../../Context/DataProviders";
 import { TypeProductItems } from "../../../../Utils/item";
 import { uploadImage } from "../Handle";
-import Column from "antd/es/table/Column";
 
-const AddProduct = ({}) => {
-  const [Title, setTitle] = useState();
-  const [imageUrl, setImageUrl] = useState();
-  const [listUrl, setListUrl] = useState([]);
-  const [Content, setContent] = useState();
-  const [Price, setPrice] = useState();
+const AddProduct: React.FC = () => {
+  const [Title, setTitle] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [listUrl, setListUrl] = useState<string[]>([]);
+  const [Content, setContent] = useState("");
+  const [Price, setPrice] = useState("");
   const [isType, setIsType] = useState("");
   const [isTypeParams, setIsTypeParams] = useState("");
   const [isParent, setIsParent] = useState("Cửa Hàng");
   const [isParentParams, setIsParentParams] = useState("cua-hang");
   const [color, setColor] = useState("");
-  const [colorImage, setColorImage] = useState();
-  const [listColor, setListColor] = useState([]);
-  const [column, setColumn] = useState();
-  const { setIsUploadProduct, setIsRefetch } = useStateProvider();
-  const { productTypes, Color } = useData();
+  const [colorImage, setColorImage] = useState("");
+  const [listColor, setListColor] = useState<any[]>([]);
+  const [column, setColumn] = useState<number | undefined>();
+  const { setDropDown, setIsRefetch } = useStateProvider();
+  const { productTypes } = useData();
 
   useEffect(() => {
-    const sort = productTypes.filter(
-      (item) => item.parentParams === isParentParams
+    const sort = productTypes.find(
+      (item: any) => item.parentParams === isParentParams
     );
 
     if (sort) {
-      setIsType(sort[0]?.name);
-      setIsTypeParams(sort[0]?.params);
+      setIsType(sort.name);
+      setIsTypeParams(sort.params);
     }
   }, [isParentParams, productTypes, Title]);
 
@@ -48,10 +46,10 @@ const AddProduct = ({}) => {
   };
 
   const HandleSubmit = () => {
-    if (!listUrl || !Title || !column) {
-      notification["error"]({
+    if (!listUrl.length || !Title || !column) {
+      notification.error({
         message: "Lỗi !!!",
-        description: `Vui lòng bổ sung đầy đủ thông tin !`,
+        description: "Vui lòng bổ sung đầy đủ thông tin !",
       });
     } else {
       const data = {
@@ -75,9 +73,9 @@ const AddProduct = ({}) => {
       };
 
       addDocument("products", data).then(() => {
-        notification["success"]({
+        notification.success({
           message: "Tải lên thành công!",
-          description: `Sản phẩm của bạn đã được tải lên !`,
+          description: "Sản phẩm của bạn đã được tải lên !",
         });
 
         setIsRefetch("upload successful");
@@ -86,21 +84,21 @@ const AddProduct = ({}) => {
     }
   };
 
-  const HandleUploadImage = (e, locate, type) => {
+  const HandleUploadImage = (e: any, locate: string, type: string) => {
     if (type === "image") {
-      uploadImage(e, locate).then((data) => {
-        setListUrl((prevUrls) => [...prevUrls, data]);
+      uploadImage(e, locate).then((data: any) => {
+        setListUrl((prevUrls: string[]) => [...prevUrls, data]);
       });
     } else if (type === "color") {
-      uploadImage(e, locate).then((data) => {
+      uploadImage(e, locate).then((data: any) => {
         setColorImage(data);
       });
     }
   };
 
-  const pushValue = (type) => {
+  const pushValue = (type: string) => {
     if (type === "image") {
-      setListUrl((prevUrls) => [...prevUrls, imageUrl]);
+      setListUrl((prevUrls: string[]) => [...prevUrls, imageUrl]);
       setImageUrl("");
     } else if (type === "color") {
       const data = {
@@ -108,31 +106,25 @@ const AddProduct = ({}) => {
         image: colorImage,
       };
 
-      setListColor((prevUrls) => [...prevUrls, data]);
+      setListColor((prevUrls: any[]) => [...prevUrls, data]);
       setColor("");
       setColorImage("");
-      // for (let i = 0; i <= 555; i++) {
-      //   let formattedNumber = i.toString().padStart(0, "0");
-      //   setListColor((prevUrls) => [...prevUrls, formattedNumber]);
-      // }
-
-      // console.log(listColor);
     }
   };
 
-  const popValue = (indexToRemove, type) => {
+  const popValue = (indexToRemove: number, type: string) => {
     if (type === "image") {
-      setListUrl((prevUrls) =>
+      setListUrl((prevUrls: string[]) =>
         prevUrls.filter((_, index) => index !== indexToRemove)
       );
     } else if (type === "color") {
-      setListColor((prevUrls) =>
+      setListColor((prevUrls: any[]) =>
         prevUrls.filter((_, index) => index !== indexToRemove)
       );
     }
   };
 
-  const HandleParentChange = (e) => {
+  const HandleParentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = e.target.value;
     setIsParent(selectedName);
     const selectedItem = TypeProductItems.find(
@@ -142,11 +134,12 @@ const AddProduct = ({}) => {
       setIsParentParams(selectedItem.params);
     }
   };
-  const HandleTypeChange = (e) => {
+
+  const HandleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = e.target.value;
     setIsType(selectedName);
     const selectedItem = productTypes.find(
-      (item) => item.name === selectedName
+      (item: any) => item.name === selectedName
     );
     if (selectedItem) {
       setIsTypeParams(selectedItem.params);
@@ -195,6 +188,7 @@ const AddProduct = ({}) => {
                           setValue={setImageUrl}
                           Value={imageUrl}
                           Input={true}
+                          PlaceHolder=""
                         />
                       </div>
                     </div>
@@ -218,7 +212,7 @@ const AddProduct = ({}) => {
                 )}
                 <div className="overflow-y-auto border rounded-xl w-full  h-[200px] mt-5">
                   <div className="p-1">
-                    {listUrl.map((items, idx) => (
+                    {listUrl.map((items: any, idx: number) => (
                       <div className=" ">
                         <div className="my-2 relative w-[145px] h-[90px] group">
                           <img
@@ -240,7 +234,7 @@ const AddProduct = ({}) => {
               </div>
             </div>
             <div className="flex items-center gap-10">
-              <div class=" w-[700px] flex flex-col  items-center">
+              <div className=" w-[700px] flex flex-col  items-center">
                 <div className="grid grid-cols-2 gap-5 w-full">
                   {isParentParams === "album-anh" ? (
                     <></>
@@ -252,17 +246,22 @@ const AddProduct = ({}) => {
                           text="Tên sản phẩm"
                           Value={Title}
                           setValue={setTitle}
+                          PlaceHolder=""
+                          Input={true}
                         />
                         <Input
                           text="Giá sản phẩm"
                           Value={Price}
                           setValue={setPrice}
                           Input={true}
+                          PlaceHolder=""
                         />
                         <Input
                           text="Mô tả sản phẩm"
                           Value={Content}
                           setValue={setContent}
+                          PlaceHolder=""
+                          Input={false}
                         />
                       </div>
                     </>
@@ -299,9 +298,10 @@ const AddProduct = ({}) => {
                         >
                           {productTypes
                             ?.filter(
-                              (item) => item.parentParams === isParentParams
+                              (item: any) =>
+                                item.parentParams === isParentParams
                             )
-                            .map((item, idx) => (
+                            .map((item: any, idx: any) => (
                               <option
                                 key={idx}
                                 className=" outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
@@ -321,6 +321,7 @@ const AddProduct = ({}) => {
                             setValue={setColor}
                             text="Mã màu"
                             Input={true}
+                            PlaceHolder=""
                           />
                         </div>
                         <label>
@@ -342,6 +343,7 @@ const AddProduct = ({}) => {
                         setValue={setColumn}
                         text="Số cột"
                         Input={true}
+                        PlaceHolder=""
                       />
                       <div className="text-center">
                         {color && colorImage ? (
@@ -373,7 +375,7 @@ const AddProduct = ({}) => {
                       </div>
                       <div className="overflow-y-auto border rounded-xl w-full  h-[100px] mt-5">
                         <div className="p-1 grid grid-cols-4 ">
-                          {listColor.map((items, idx) => {
+                          {listColor.map((items: any, idx: any) => {
                             return (
                               <div className="my-2 relative w-[50px] h-[50px] group border flex justify-center items-center">
                                 <img src={items.image} alt="" />
@@ -395,7 +397,7 @@ const AddProduct = ({}) => {
                         không có màu bạn cần?{" "}
                         <span
                           className="hover:text-blue-500 hover:underline underline"
-                          onClick={() => setIsUploadProduct("add-color")}
+                          onClick={() => setDropDown("add-color")}
                         >
                           thêm màu
                         </span>
@@ -429,7 +431,7 @@ const AddProduct = ({}) => {
         <AiFillCloseCircle
           className="absolute -top-5 -right-5 text-[40px] border-white border-4 bg-black rounded-3xl text-white "
           onClick={() => {
-            setIsUploadProduct("");
+            setDropDown("");
           }}
         />
       </div>
